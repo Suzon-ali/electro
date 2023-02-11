@@ -67,6 +67,9 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/product/manage', [ProductController::class, 'manageProduct']);
     Route::get('/product/edit/{id}', [ProductController::class, 'editProduct']);
     Route::post('/product/update/{id}', [ProductController::class, 'updateProduct']);
+    Route::get('/product/delete/{id}', [ProductController::class, 'deleteProduct']);
+    Route::get('/product/active/{id}', [ProductController::class, 'activeProduct']);
+    Route::get('/product/inactive/{id}', [ProductController::class, 'inactiveProduct']);
 
 
 

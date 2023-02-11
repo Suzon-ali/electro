@@ -175,6 +175,30 @@ class ProductController extends Controller
 
     }
 
+    public function activeProduct($id)
+    {
+      $product = Product::find($id);
+      $product->status = 1;
+      $product->save();
+      return redirect()->back()->with(session()->flash('success', 'Product has been active!')); 
+    }
+ 
+    public function inactiveProduct($id)
+    {
+      $product = Product::find($id);
+      $product->status = 0;
+      $product->save();
+      return redirect()->back()->with(session()->flash('success', 'Product has been inactive!')); 
+ 
+    }
+ 
+    public function deleteProduct($id)
+    {
+     $product = Product::find($id);
+     $product->delete();
+     return redirect()->back()->with(session()->flash('success', 'Product has been deleted.!')); 
+    }
+
 
 
 

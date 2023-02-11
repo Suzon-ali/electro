@@ -101,7 +101,7 @@
 
                                 <div class="product">
                                     <div class="product-img">
-                                        <img style="" src="{{asset('product/'.$product->image)}}" alt="" >
+                                        <a href="{{url('product-details/'.$product->id.'/'.$product->name)}}"><img style="" src="{{asset('product/'.$product->image)}}" alt="" ></a>
                                         <div class="product-label">
                                             @if ($product->discount_percentage)
                                             <span class="sale">{{$product->discount_percentage}}%</span>
@@ -275,7 +275,8 @@
                                 
                                 <div class="product">
                                     <div class="product-img">
-                                        <img style="" src="{{asset('product/'.$product->image)}}" alt="" >
+                                        <a href="{{url('product-details/'.$product->id.'/'.$product->name)}}"><img style="" src="{{asset('product/'.$product->image)}}" alt="" ></a>
+                                        
                                         <div class="product-label">
                                             @if ($product->discount_percentage)
                                             <span class="sale">{{$product->discount_percentage}}%</span>

@@ -16,8 +16,8 @@ class FrontendController extends Controller
     {
         $categories = Category::where('status','1')->get();
         $products = Product::where('status','1')->get();
-        $newProducts = Product::with('favorite')->orderBy('created_at', 'desc')->limit(10)->get();
-        $typeProduct = Product::with('type','favorite')->get();
+        $newProducts = Product::with('favorite')->orderBy('created_at', 'desc')->where('status','1')->limit(10)->get();
+        $typeProduct = Product::with('type','favorite')->where('status','1')->get();
         $favourite = Favorite::with('product')->where('ip_address', request()->ip())->get();
         $productIds = $favourite->pluck('product.id')->toArray();
         
@@ -37,8 +37,11 @@ class FrontendController extends Controller
     public function productDetails($id)
     {
         $categories = Category::where('status','1')->get();
-        $product = Product::with('productPhotos','category','brand')->find($id);
-        return view('frontend.home.product', compact('product','categories'));
+        $product = Product::with('productPhotos','category','brand')->where('status','1')->find($id);
+        $products = Product::with('productPhotos','category','brand')->where('status','1')->get();
+        $favourite = Favorite::with('product')->where('ip_address', request()->ip())->get();
+        $productIds = $favourite->pluck('product.id')->toArray();
+        return view('frontend.home.product', compact('product','categories','favourite','productIds','products'));
 
     }
 

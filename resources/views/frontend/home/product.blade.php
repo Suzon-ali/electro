@@ -73,11 +73,20 @@
                         </div>
                         <a class="review-link" href="#">10 Review(s) | Add your review</a>
                     </div>
+                    @php
+                        $price = $product->price;
+                        $discountParcentage = $product->discount_percentage;
+                        $totalDiscountPercent = $price / 100;
+                        $minusPrice = $discountParcentage*$totalDiscountPercent + $price;
+                    @endphp
                     <div>
-                        <h3 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h3>
+                        <h3 class="product-price">${{$product->price}} 
+                            @if ($product->discount_percentage)
+                                <del class="product-old-price"> {{$minusPrice}} </del></h3>
+                            @endif </h3>
                         <span class="product-available">In Stock</span>
                     </div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p> {{$product->short_description}}</p>
 
                     <div class="product-options">
                         <label>
@@ -106,15 +115,28 @@
                         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
                     </div>
 
-                    <ul class="product-btns">
-                        <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
-                        <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
-                    </ul>
+                    @if (in_array($product->id, $productIds))
+                                        
+                                            <div class="product-btns">
+                                                <a style="color: red ; text-decoration:none;" class="add-to-wishlist" class="tooltipp" href="{{url('/remove/from/favorite/'.$product->id)}}">
+                                                    <i class="fa fa-heart"></i> <span class="tooltipp">   Remove from Favorite</span></a>
+                                                
+                                            </div>
+                                       
+                                        @else
+                                        <form action="{{url('/add/to/favorite')}}" method="post">
+                                            @csrf
+                                            <div class="product-btns">
+                                                <input type="hidden" name="product_id" value="{{$product->id}}" id="">
+                                                <input type="hidden" name="price" value="{{$product->price}}" id="">
+                                                <button type="submit" class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">   Add to Favorite</span></button>
+                                            </div>
+                                        </form>
+                                        @endif
 
                     <ul class="product-links">
                         <li>Category:</li>
-                        <li><a href="#">Headphones</a></li>
-                        <li><a href="#">Accessories</a></li>
+                        <li><a href="{{url('category/' . $product->category->id. '/'.$product->category->slug)}}">{{$product->category->name}}</a></li>
                     </ul>
 
                     <ul class="product-links">
@@ -146,7 +168,7 @@
                         <div id="tab1" class="tab-pane fade in active">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p> {{$product->short_description}}</p>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +178,7 @@
                         <div id="tab2" class="tab-pane fade in">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <p>{{strip_tags($product->long_description)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -364,46 +386,41 @@
             </div>
 
             <!-- product -->
-            <div class="col-md-3 col-xs-6">
-                <div class="product">
-                    <div class="product-img">
-                        <img src="./img/product01.png" alt="">
-                        <div class="product-label">
-                            <span class="sale">-30%</span>
-                        </div>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                        <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-                        <div class="product-rating">
-                        </div>
-                        <div class="product-btns">
-                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                        </div>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /product -->
 
-            <!-- product -->
+            @foreach ($products as $category_product)
+
+            @if($category_product->category->id == $product->category->id  )
             <div class="col-md-3 col-xs-6">
                 <div class="product">
                     <div class="product-img">
-                        <img src="./img/product02.png" alt="">
+                        <a href="{{url('product-details/'.$product->id.'/'.$product->name)}}"><img src="{{asset('product/'.$category_product->image)}}" alt=""></a>
+                        
                         <div class="product-label">
-                            <span class="new">NEW</span>
+                            @if ($category_product->discount_percentage)
+                            <span class="sale">{{$category_product->discount_percentage}}%</span>
+                            @endif
+                            
+                            @if ($category_product->tag)
+                            <span class="new">{{$category_product->tag}}</span>
+                            @endif
                         </div>
                     </div>
+
+                                    @php
+                                        $price = $product->price;
+                                        $discountParcentage = $product->discount_percentage;
+                                        $totalDiscountPercent = $price / 100;
+                                        $minusPrice = $discountParcentage*$totalDiscountPercent + $price;
+                                    @endphp
+
+
                     <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                        <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
+                        <p class="product-category">{{$product->category->name}}</p>
+                        <h3 class="product-name"><a href="#">{{$product->name}}</a></h3>
+                        <h4 class="product-price">${{$product->price}} 
+                        @if ($product->discount_percentage)
+                            <del class="product-old-price"> {{$minusPrice}} </del></h4>
+                        @endif </h4>
                         <div class="product-rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -411,75 +428,50 @@
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                         </div>
+
+                    <div class="flex justify-center">
+
+
+                        @if (in_array($product->id, $productIds))
+                        
+                            <div class="product-btns">
+                                <a style="color: red ; text-decoration:none;" class="add-to-wishlist" class="tooltipp" href="{{url('/remove/from/favorite/'.$product->id)}}">
+                                    <i class="fa fa-heart"></i> <span class="tooltipp">Unfavorite</span></a>
+                                
+                            </div>
+                    
+                        @else
+                        <form action="{{url('/add/to/favorite')}}" method="post">
+                            @csrf
+                            <div class="product-btns">
+                                <input type="hidden" name="product_id" value="{{$product->id}}" id="">
+                                <input type="hidden" name="price" value="{{$product->price}}" id="">
+                                <button type="submit" class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Add to favorite</span></button>
+                            </div>
+                        </form>
+                        @endif
+                    
                         <div class="product-btns">
-                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                            <a style="text-decoration:none;" class="add-to-wishlist" class="tooltipp" href="{{url('product-details/'.$product->id.'/'.$product->name)}}">
+                                <i class="fa fa-eye"></i> <span class="tooltipp">Quick View</span></a>
+                            
                         </div>
+                        
+                        
+                    </div>
+                    
                     </div>
                     <div class="add-to-cart">
                         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
                     </div>
                 </div>
             </div>
-            <!-- /product -->
-
+            @endif
+            @endforeach
+            
+    
             <div class="clearfix visible-sm visible-xs"></div>
 
-            <!-- product -->
-            <div class="col-md-3 col-xs-6">
-                <div class="product">
-                    <div class="product-img">
-                        <img src="./img/product03.png" alt="">
-                    </div>
-                    <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                        <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-                        <div class="product-rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-o"></i>
-                        </div>
-                        <div class="product-btns">
-                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                        </div>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /product -->
-
-            <!-- product -->
-            <div class="col-md-3 col-xs-6">
-                <div class="product">
-                    <div class="product-img">
-                        <img src="./img/product04.png" alt="">
-                    </div>
-                    <div class="product-body">
-                        <p class="product-category">Category</p>
-                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                        <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-                        <div class="product-rating">
-                        </div>
-                        <div class="product-btns">
-                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                        </div>
-                    </div>
-                    <div class="add-to-cart">
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /product -->
 
         </div>
         <!-- /row -->

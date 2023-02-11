@@ -37,7 +37,8 @@
 
                                         <div class="product">
                                             <div class="product-img">
-                                                <img style="" src="{{asset('product/'.$favourite->product->image)}}" alt="" >
+                                                <a href="{{url('product-details/'.$favourite->product->id.'/'.$favourite->product->name)}}"><img style="" src="{{asset('product/'.$favourite->product->image)}}" alt="" ></a>
+                                                
                                                 <div class="product-label">
                                                     @if ($favourite->product->discount_percentage)
                                                     <span class="sale">{{$favourite->product->discount_percentage}}%</span>

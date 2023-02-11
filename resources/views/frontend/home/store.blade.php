@@ -248,79 +248,82 @@
                    @if (!$product)
                         <h1>No Product found in this category</h1>                       
                    @else
-                   <div class="col-md-4 col-xs-6">
-                    <div class="product">
-                        <div class="product-img">
-                            <img src="{{asset('/product/'.$product->image)}}" alt="">
-                            <div class="product-label">
-                                @if ($product->discount_percentage)
-                                <span class="sale">{{$product->discount_percentage}}%</span>
-                                @endif
-                                
-                                @if ($product->tag)
-                                <span class="new">{{$product->tag}}</span>
-                                @endif
-                            </div>
-                        </div>
-                        @php
-                            $price = $product->price;
-                            $discountParcentage = $product->discount_percentage;
-                            $totalDiscountPercent = $price / 100;
-                            $minusPrice = $discountParcentage*$totalDiscountPercent + $price;         
-                        @endphp
-                        <div class="product-body">
-                            <p class="product-category">{{$product->category->name}}</p>
-                            <h3 class="product-name"><a href="#">{{$product->name}}</a></h3>
-                            <h4 class="product-price">${{$product->price}} 
-                            @if ($product->discount_percentage)
-                                    <del class="product-old-price"> {{$minusPrice}} </del></h4>
-                            @endif </h4>              
-                            <div class="product-rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                            </div>
-                            <div class="flex justify-center">
-
-
-                                @if (in_array($product->id, $productIds))
-                                
-                                    <div class="product-btns">
-                                        <a href="{{url('remove/from/favorite/'.$product->id)}}" style="color: red ; text-decoration:none;" class="add-to-wishlist" class="tooltipp" >
-                                            <i class="fa fa-heart"></i> <span class="tooltipp">Unfavorite</span></a>
-                                        
-                                    </div>
+                    @if ($product->status == 1)
+                    <div class="col-md-4 col-xs-6">
+                        <div class="product">
+                           <div class="product-img">
+                               <a href="{{url('product-details/'.$product->id.'/'.$product->name)}}"><img src="{{asset('/product/'.$product->image)}}" alt=""></a>
                                
-                                @else
-                                <form action="{{url('/add/to/favorite')}}" method="post">
-                                    @csrf
-                                    <div class="product-btns">
-                                        <input type="hidden" name="product_id" value="{{$product->id}}" id="">
-                                        <input type="hidden" name="price" value="{{$product->price}}" id="">
-                                        <button type="submit" class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Add to favorite</span></button>
-                                    </div>
-                                </form>
-                                @endif
-                             
-                                
-                                <form action="{{url('/quick/view')}}" method="post">
-                                    @csrf
-                                    <div class="product-btns">
-                                        
-                                            <input type="hidden" name="product_id" value="{{$product->id}}" id="">
-                                            <input type="hidden" name="price" value="{{$product->price}}" id="">
-                                            <button type="submit" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Quick View</span></button>
-                                    
-                                    </div>
-                                </form>
+                               <div class="product-label">
+                                   @if ($product->discount_percentage)
+                                   <span class="sale">{{$product->discount_percentage}}%</span>
+                                   @endif
+                                   
+                                   @if ($product->tag)
+                                   <span class="new">{{$product->tag}}</span>
+                                   @endif
                                </div>
-                        </div>
-                        <div class="add-to-cart">
-                            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                        </div>
-                    </div>
+                           </div>
+                           @php
+                               $price = $product->price;
+                               $discountParcentage = $product->discount_percentage;
+                               $totalDiscountPercent = $price / 100;
+                               $minusPrice = $discountParcentage*$totalDiscountPercent + $price;         
+                           @endphp
+                           <div class="product-body">
+                               <p class="product-category">{{$product->category->name}}</p>
+                               <h3 class="product-name"><a href="#">{{$product->name}}</a></h3>
+                               <h4 class="product-price">${{$product->price}} 
+                               @if ($product->discount_percentage)
+                                       <del class="product-old-price"> {{$minusPrice}} </del></h4>
+                               @endif </h4>              
+                               <div class="product-rating">
+                                   <i class="fa fa-star"></i>
+                                   <i class="fa fa-star"></i>
+                                   <i class="fa fa-star"></i>
+                                   <i class="fa fa-star"></i>
+                                   <i class="fa fa-star"></i>
+                               </div>
+                               <div class="flex justify-center">
+   
+   
+                                   @if (in_array($product->id, $productIds))
+                                   
+                                       <div class="product-btns">
+                                           <a href="{{url('remove/from/favorite/'.$product->id)}}" style="color: red ; text-decoration:none;" class="add-to-wishlist" class="tooltipp" >
+                                               <i class="fa fa-heart"></i> <span class="tooltipp">Unfavorite</span></a>
+                                           
+                                       </div>
+                                  
+                                   @else
+                                   <form action="{{url('/add/to/favorite')}}" method="post">
+                                       @csrf
+                                       <div class="product-btns">
+                                           <input type="hidden" name="product_id" value="{{$product->id}}" id="">
+                                           <input type="hidden" name="price" value="{{$product->price}}" id="">
+                                           <button type="submit" class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Add to favorite</span></button>
+                                       </div>
+                                   </form>
+                                   @endif
+                                
+                                   
+                                   <form action="{{url('/quick/view')}}" method="post">
+                                       @csrf
+                                       <div class="product-btns">
+                                           
+                                               <input type="hidden" name="product_id" value="{{$product->id}}" id="">
+                                               <input type="hidden" name="price" value="{{$product->price}}" id="">
+                                               <button type="submit" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Quick View</span></button>
+                                       
+                                       </div>
+                                   </form>
+                                  </div>
+                           </div>
+                           <div class="add-to-cart">
+                               <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                           </div>
+                       </div>
+                    @endif
                 </div>
                    @endif
             

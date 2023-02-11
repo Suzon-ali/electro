@@ -22,23 +22,6 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-
-                    @if (session()->has('success'))
-
-                    <div id="notify" style="display: flex;
-                    flex-direction:row; 
-                    justify-content: 
-                    space-between;
-                    align-items:center; 
-                    " id="alert-area" class="alert alert-success ">
-                        <div>
-                            {{ session()->get('success') }}
-                        </div>
-                        <button class="btn btn-success "  id="close_alert_area" >
-                            x
-                        </button>
-                    </div>
-                    @endif
                    
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -127,22 +110,4 @@
     </div>
 
  
-    <script>
-        let alertArea = document.getElementById('alert-area');
-        let alertClose = document.getElementById('close_alert_area');
-        let notify = document.getElementById('notify');
-        alertClose.addEventListener('click', function(){
-            alertArea.style.display = 'none';
-        })
-
-        setTimeout(function(){
-        notify.style.display = "none";
-        }, 3000);
-        
-        
-    </script>
-
-
-
-
 @endsection
