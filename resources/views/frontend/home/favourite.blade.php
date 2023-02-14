@@ -89,9 +89,16 @@
                                                </div>
                                               
                                             </div>
-                                            <div class="add-to-cart">
-                                                <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                                            </div>
+                                            <form action="{{url('add/to/cart')}}" method="post">
+                                                @csrf
+                                            
+                                                <div class="add-to-cart">
+                                                    <input type="hidden" name="product_id" value="{{$favourite->product->id}}" id="">
+                                                    <input type="hidden" name="product_price" value="{{$favourite->product->price}}" id="">
+                                                    <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                                </div>
+                                            
+                                            </form>
                                         </div>
                                         
         

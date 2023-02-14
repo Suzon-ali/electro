@@ -64,21 +64,14 @@
 
                             @php
                             $userId = session()->get('userId');
+                            $ip_address = request()->ip();
                             @endphp
 
-                               
-
-                                @if (session()->has('userId'))
-                                <a href="{{url('/favourite/'.$userId)}}"><i class="fa fa-heart-o"></i><span>Your Wishlist</span>
-                                    <div class="qty">{{ App\Models\Favorite::get()->count()}}</div></a>
-                                    
-                                @else
-                                <a href="{{url('/favourite/'.$userId)}}"><i class="fa fa-heart-o"></i><span>Your Wishlist</span>
-                                    <div class="qty">{{ App\Models\Favorite::get()->count()}}</div></a>
-                                    
-                                @endif
-                                
-                           
+                             <a href="{{url('/favourite/'.$userId)}}"><i class="fa fa-heart-o"></i><span>Your Wishlist</span>
+                                    <div class="qty">{{ \App\Models\Favorite::where('user_id', $userId)
+                                        ->orWhere('ip_address', $ip_address)
+                                        ->count() }}</div>
+                            
                         </div>
                        
 
@@ -87,35 +80,44 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>Your Cart</span>
-                                <div class="qty">3</div>
+                                <div class="qty">{{ \App\Models\Cart::where('user_id', $userId)
+                                    ->orWhere('ip_address', $ip_address)
+                                    ->count() }}</div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
+                                    @php
+                                        $total =0;
+                                    @endphp
+
+                                    @foreach ($cartProducts as $product)
                                     <div class="product-widget">
                                         <div class="product-img">
-                                            <img src="{{asset('frontend/assets/')}}/img/product01.png" alt="">
+                                            <img src="{{asset('product/'.$product->product->image)}}" alt="">
                                         </div>
                                         <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                            <h3 class="product-name"><a href="#">{{$product->product->name}}</a></h3>
+                                            <h4 class="product-price"><span class="qty">{{$product->qty}}x</span>${{$product->total_price}}</h4>
                                         </div>
                                         <button class="delete"><i class="fa fa-close"></i></button>
                                     </div>
 
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="{{asset('frontend/assets/')}}/img/product02.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
+                                    @php
+                                        $total += $product->total_price ;
+                                    @endphp
+
+
+                                    @endforeach
+                                    
+                                    
+
+                                    
                                 </div>
                                 <div class="cart-summary">
-                                    <small>3 Item(s) selected</small>
-                                    <h5>SUBTOTAL: $2940.00</h5>
+                                    <small>{{ \App\Models\Cart::where('user_id', $userId)
+                                        ->orWhere('ip_address', $ip_address)
+                                        ->count() }} Item(s) selected</small>
+                                    <h5>SUBTOTAL: ${{$total}}</h5>
                                 </div>
                                 <div class="cart-btns">
                                     <a href="#">View Cart</a>

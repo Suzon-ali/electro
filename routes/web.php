@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TypeController;
+use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Favorite\FavoriteController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -97,3 +98,7 @@ Route::get('/login',[UserController::class,'userLoginPage']);
 Route::post('/user-register',[UserController::class,'userRegister']);
 Route::post('/user-login',[UserController::class,'userLogin']);
 Route::get('/user-logout',[UserController::class,'userLogout']);
+
+
+//CartController
+Route::post('add/to/cart',[CartController::class,'adToCart']);

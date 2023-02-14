@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->string('ip_address')->nullable();
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('qty');
             $table->float('price');

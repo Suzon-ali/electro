@@ -41,18 +41,26 @@ class FavoriteController extends Controller
 
    public function userfavouriteList($id)
    {
+
+        $user_id = session()->get('userId');
+        $ip_address = request()->ip();
+        $cartProducts = Cart::with('product')->where('user_id', $user_id)->orWhere('ip_address', $ip_address)->get();
+
        $user_id = session()->get('userId'); 
        $categories = Category::where('status','1')->get();
        $favourites = Favorite::with('product')->where('user_id', $id )->orWhere('ip_address', request()->ip())->get();
-       return view('frontend.home.favourite', compact('categories','favourites'));
+       return view('frontend.home.favourite', compact('categories','favourites','cartProducts'));
    }
 
    public function favouriteList()
    {
-      
+        $user_id = session()->get('userId');
+        $ip_address = request()->ip();
+        $cartProducts = Cart::with('product')->where('user_id', $user_id)->orWhere('ip_address', $ip_address)->get();
+
        $categories = Category::where('status','1')->get();
        $favourites = Favorite::with('product')->where('ip_address', request()->ip())->get();
-       return view('frontend.home.favourite', compact('categories','favourites'));
+       return view('frontend.home.favourite', compact('categories','favourites','cartProducts'));
    }
 
    public function deleteFromFavorite($id)
